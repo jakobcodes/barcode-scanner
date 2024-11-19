@@ -7,9 +7,10 @@ export default function ManualEntry() {
 
   const handleSubmit = () => {
     if (barcode.trim()) {
-      // For now, just alert the data. Later we'll integrate with the API
-      alert(`Barcode entered manually: ${barcode}`);
-      router.back();
+      router.push({
+        pathname: "/product",
+        params: { barcode: barcode.trim() }
+      });
     }
   };
 

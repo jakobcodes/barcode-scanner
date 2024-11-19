@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { Link, router } from 'expo-router';
+import { Link, router, useFocusEffect } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
@@ -12,35 +12,47 @@ export default function Scanner() {
   const [permission, requestPermission] = useCameraPermissions();
   const [isScanning, setIsScanning] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isProcessing = useRef(false); // Add this ref to track processing state
 
   const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
     try {
-      if (!isScanning) return;
+      if (!isScanning || isProcessing.current) return; // Check if already processing
+      
+      isProcessing.current = true; // Set processing flag
       setIsScanning(false);
-      
-      // First show the alert and wait for user interaction
-      await new Promise((resolve) => {
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-        resolve(true);
+      console.log("Barcode", data);
+  
+      router.push({
+        pathname: "/product",
+        params: { 
+          barcode: data,
+        }
       });
-
-      // Navigate to home screen instead of going back
-      setTimeout(() => {
-        router.replace('/');  // or router.push('/') depending on your navigation needs
-      }, 100);
-      
     } catch (err) {
+      console.log("Error processing barcode", err);
       setError('Failed to process barcode. Please try again.');
       setIsScanning(true);
-    }
+      isProcessing.current = false; // Reset processing flag on error
+    } 
   };
 
-  // Reset scanning state when component unmounts
-  useEffect(() => {
-    return () => {
-      setIsScanning(false);
-    };
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const resetScanner = () => {
+        setIsScanning(true);
+        setError(null);
+        isProcessing.current = false;
+      };
+
+      // Reset scanner when screen comes into focus
+      resetScanner();
+
+      return () => {
+        setIsScanning(false);
+        isProcessing.current = false;
+      };
+    }, [])
+  );
 
   if (!permission) {
     return (
@@ -193,7 +205,7 @@ const styles = StyleSheet.create({
   },
   scanAreaContainer: {
     width: SCAN_AREA_SIZE,
-    height: SCAN_AREA_SIZE,
+    height: SCAN_AREA_SIZE/3,
     justifyContent: 'center',
     alignItems: 'center',
   },
