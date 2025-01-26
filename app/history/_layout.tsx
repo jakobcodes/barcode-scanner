@@ -23,14 +23,17 @@ export default function HistoryLayout() {
   };
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack>
       <Stack.Screen
         name="index"
         options={{
-          headerShown: true,
           title: 'History',
+          headerStyle: {
+            backgroundColor: colorScheme === 'dark' ? '#000' : '#fff',
+          },
+          headerTintColor: colorScheme === 'dark' ? '#fff' : '#000',
           headerRight: () => (
-            <TouchableOpacity onPress={handleClearHistory} style={{ marginRight: 15 }}>
+            <TouchableOpacity onPress={handleClearHistory} style={{ marginRight: 16 }}>
               <Ionicons
                 name="trash-outline"
                 size={24}
@@ -43,9 +46,11 @@ export default function HistoryLayout() {
       <Stack.Screen
         name="details"
         options={{
-          headerShown: true,
-          title: 'Scan Details',
-          headerBackTitle: 'Back'
+          title: '',
+          headerStyle: {
+            backgroundColor: colorScheme === 'dark' ? '#000' : '#fff',
+          },
+          headerTintColor: colorScheme === 'dark' ? '#fff' : '#000',
         }}
       />
     </Stack>
