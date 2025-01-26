@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 
 export default function ProductScreen() {
   const { barcode } = useLocalSearchParams<{ barcode: string }>();
-  const { product, loading, error } = useProduct(barcode);
+  const { product, loading, error, retry} = useProduct(barcode);
 
   // Handle invalid barcode
   useEffect(() => {
@@ -29,7 +29,13 @@ export default function ProductScreen() {
   if (error || !product) {
     return (
       <View style={styles.container}>
-        <ErrorView message={error?.message || 'Product not found'} />
+        <ErrorView 
+          message={error?.message || 'Product not found'} 
+          action={retry ? {
+            label: 'Try Again',
+            onPress: retry
+          } : undefined}
+        />
       </View>
     );
   }

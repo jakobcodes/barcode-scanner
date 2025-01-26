@@ -8,22 +8,6 @@ interface ProductDetailsProps {
   product: Product;
 }
 
-function getNutriScoreType(grade: string): 'success' | 'warning' | 'error' {
-  switch (grade.toLowerCase()) {
-    case 'a': return 'success';
-    case 'b': case 'c': return 'warning';
-    default: return 'error';
-  }
-}
-
-function getEcoScoreType(grade: string): 'success' | 'warning' | 'error' {
-  switch (grade.toLowerCase()) {
-    case 'a': return 'success';
-    case 'b': case 'c': return 'warning';
-    default: return 'error';
-  }
-}
-
 export function ProductDetails({ product }: ProductDetailsProps) {
   return (
     <View style={styles.container}>
