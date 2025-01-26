@@ -1,6 +1,7 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import type { StorageProduct } from '../../lib/types/storage.types';
+import { NutriScoreBadge } from '../Product/NutriScoreBadge';
 
 interface HistoryListProps {
   products: StorageProduct[];
@@ -19,12 +20,30 @@ export function HistoryList({ products, onRefresh, isRefreshing }: HistoryListPr
         params: { id: item._id }
       })}
     >
-      <View style={styles.itemContent}>
-        <Text style={styles.title}>{item.product_name}</Text>
-        <Text style={styles.brand}>{item.brands}</Text>
-        <Text style={styles.date}>
-          Scanned: {new Date(item.scannedAt).toLocaleDateString()}
-        </Text>
+      <View style={styles.itemContainer}>
+        {item.image_front_url ? (
+          <Image
+            source={{ uri: item.image_front_url }}
+            style={styles.image}
+          />
+        ) : (
+          <Image
+            source={require('../../../assets/images/marcin.png')}
+            style={styles.image}
+          />
+        ) }
+        <View style={styles.itemContent}>
+          <Text style={styles.title}>{item.product_name || 'Unknown name'}</Text>
+          {item.brands && (
+            <Text style={styles.brand}>{item.brands}</Text>
+          )}
+          {item.nutriscore_grade && (
+            <NutriScoreBadge grade={item.nutriscore_grade as any} />
+          )}
+          <Text style={styles.date}>
+            Scanned: {new Date(item.scannedAt).toLocaleDateString()}
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -55,7 +74,7 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: '#fff',
-    padding: 15,
+    padding: 12,
     marginVertical: 4,
     marginHorizontal: 8,
     borderRadius: 8,
@@ -68,7 +87,19 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    borderRadius: 6,
+    backgroundColor: '#f0f0f0',
+  },
   itemContent: {
+    flex: 1,
     gap: 4,
   },
   title: {
