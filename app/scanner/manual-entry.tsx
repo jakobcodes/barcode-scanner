@@ -8,7 +8,7 @@ export default function ManualEntry() {
   const handleSubmit = () => {
     if (barcode.trim()) {
       router.push({
-        pathname: "/product",
+        pathname: "/scanner/product",
         params: { barcode: barcode.trim() }
       });
     }

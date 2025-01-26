@@ -23,7 +23,7 @@ export default function Scanner() {
       console.log("Barcode", data);
   
       router.push({
-        pathname: "/product",
+        pathname: "/scanner/product",
         params: { 
           barcode: data,
         }
