@@ -28,7 +28,7 @@ export function HistoryList({ products, onRefresh, isRefreshing }: HistoryListPr
           />
         ) : (
           <Image
-            source={require('../../../assets/images/marcin.png')}
+            // source={require('../../../assets/images/marcin.png')}
             style={styles.image}
           />
         ) }

@@ -34,8 +34,8 @@ export function NutriScoreBadge({ grade }: NutriScoreBadgeProps) {
   const colors = NUTRI_SCORE_COLORS[normalizedGrade];
 
   return (
-    <View style={[styles.badge, { backgroundColor: colors.background }]}>
-      <Text style={[styles.text, { color: colors.text }]}>
+    <View style={[styles.badge, { backgroundColor: '#e8f5e9' }]}>
+      <Text style={[styles.text, { color: '#1b5e20' }]}>
         Nutri-Score: {grade.toUpperCase()}
       </Text>
     </View>
