@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, TouchableOpacity, Dimensions } from 're
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { Link, router, useFocusEffect } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { validateBarcode } from '../lib/utils/barcodeValidator';
 
 const { width } = Dimensions.get('window');
 const SCAN_AREA_SIZE = width * 0.7;
@@ -21,16 +22,22 @@ export default function Scanner() {
       isProcessing.current = true; // Set processing flag
       setIsScanning(false);
       console.log("Barcode", data);
-  
+
+      // Validate barcode before navigation
+      const validation = validateBarcode(data);
+      if (!validation.isValid) {
+        throw new Error(validation.error || 'Invalid barcode format');
+      }
+
       router.push({
-        pathname: "/product",
+        pathname: "/scanner/product",
         params: { 
           barcode: data,
         }
       });
     } catch (err) {
       console.log("Error processing barcode", err);
-      setError('Failed to process barcode. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to process barcode. Please try again.');
       setIsScanning(true);
       isProcessing.current = false; // Reset processing flag on error
     } 

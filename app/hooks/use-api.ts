@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { ApiHandler } from '../lib/api/apiHandler';
 import type { Product, ApiError } from '../lib/types/api.types';
 
@@ -6,11 +6,15 @@ export function useApi() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
 
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   const fetchProduct = async (barcode: string): Promise<Product | null> => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await ApiHandler.getProduct(barcode);
       return response.product;
     } catch (err) {
@@ -26,5 +30,6 @@ export function useApi() {
     fetchProduct,
     loading,
     error,
+    clearError,
   };
 } 

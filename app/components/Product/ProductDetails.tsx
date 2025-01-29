@@ -2,25 +2,10 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import type { Product } from '../../lib/types/api.types';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
+import { NutriScoreBadge } from './NutriScoreBadge';
 
 interface ProductDetailsProps {
   product: Product;
-}
-
-function getNutriScoreType(grade: string): 'success' | 'warning' | 'error' {
-  switch (grade.toLowerCase()) {
-    case 'a': return 'success';
-    case 'b': case 'c': return 'warning';
-    default: return 'error';
-  }
-}
-
-function getEcoScoreType(grade: string): 'success' | 'warning' | 'error' {
-  switch (grade.toLowerCase()) {
-    case 'a': return 'success';
-    case 'b': case 'c': return 'warning';
-    default: return 'error';
-  }
 }
 
 export function ProductDetails({ product }: ProductDetailsProps) {
@@ -89,16 +74,10 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           <Text style={styles.sectionTitle}>Scores</Text>
           <View style={styles.scores}>
             {product.nutriscore_grade && (
-              <Badge 
-                label={`Nutri-Score: ${product.nutriscore_grade.toUpperCase()}`}
-                type={getNutriScoreType(product.nutriscore_grade)}
-              />
+              <NutriScoreBadge grade={product.nutriscore_grade.toLowerCase() as any} />
             )}
             {product.ecoscore_grade && (
-              <Badge 
-                label={`Eco-Score: ${product.ecoscore_grade.toUpperCase()}`}
-                type={getEcoScoreType(product.ecoscore_grade)}
-              />
+              <NutriScoreBadge grade={product.ecoscore_grade.toLowerCase() as any} />
             )}
           </View>
         </Card>
